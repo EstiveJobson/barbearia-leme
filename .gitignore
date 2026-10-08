@@ -1,7 +1,10 @@
 node_modules
-.vercel
 dist
+.output
+.vinxi
+.vercel
+.nitro
 .env
 .env.*
-.DS_Store
 *.log
+.DS_Store

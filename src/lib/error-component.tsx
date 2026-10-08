@@ -1,7 +1,8 @@
+import type { ReactNode } from "react";
 import type { ErrorComponentProps } from "@tanstack/react-router";
-import { TriangleAlert } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
-const FALLBACK_MESSAGE = "An unexpected error occurred. Try reloading the page.";
+const FALLBACK_MESSAGE = "Ocorreu um erro inesperado. Tente recarregar a página.";
 
 function errorMessage(error: unknown): string {
   if (error instanceof Error && error.message) return error.message;
@@ -9,21 +10,35 @@ function errorMessage(error: unknown): string {
   return FALLBACK_MESSAGE;
 }
 
+function Shell({ title, children }: { title: string; children?: ReactNode }) {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-ink px-6 text-center text-cream">
+      <h1 className="font-display text-5xl tracking-wide uppercase">{title}</h1>
+      {children}
+      <Link
+        to="/"
+        className="inline-flex min-h-12 items-center justify-center bg-gold px-6 py-3 font-display text-xl tracking-widest text-ink uppercase"
+      >
+        Voltar para o início
+      </Link>
+    </main>
+  );
+}
+
 export function AppErrorComponent({ error }: ErrorComponentProps) {
   return (
-    <main
-      className={
-        "flex min-h-screen flex-col items-center justify-center gap-3 px-6 text-center " +
-        "bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50"
-      }
-    >
-      <span className="text-red-500" aria-hidden="true">
-        <TriangleAlert className="size-10" strokeWidth={2} />
-      </span>
-      <h1 className="text-lg font-semibold">Something went wrong</h1>
-      <p className="max-w-md text-sm break-words text-zinc-500 dark:text-zinc-400">
-        {errorMessage(error)}
+    <Shell title="Algo deu errado">
+      <p className="max-w-md text-sm text-pretty text-mist">{errorMessage(error)}</p>
+    </Shell>
+  );
+}
+
+export function NotFoundPage() {
+  return (
+    <Shell title="Página não encontrada">
+      <p className="max-w-md text-sm text-pretty text-mist">
+        Esse endereço não existe. Volte para a página da barbearia.
       </p>
-    </main>
+    </Shell>
   );
 }

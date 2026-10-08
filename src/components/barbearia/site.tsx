@@ -47,6 +47,7 @@ export function Site() {
   const [open, setOpen] = useState(false);
   const [booking, setBooking] = useState<BookingState>(initialBooking);
   const [lightbox, setLightbox] = useState<number | null>(null);
+  const [hideWa, setHideWa] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = open || lightbox !== null ? "hidden" : "";
@@ -54,6 +55,27 @@ export function Site() {
       document.body.style.overflow = "";
     };
   }, [open, lightbox]);
+
+  useEffect(() => {
+    const target = document.getElementById("agendar");
+    if (!target) return;
+    const small = window.matchMedia("(max-width: 767px)");
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        setHideWa(small.matches && entry.isIntersecting);
+      },
+      { threshold: 0.12 },
+    );
+    const onChange = () => {
+      if (!small.matches) setHideWa(false);
+    };
+    obs.observe(target);
+    small.addEventListener("change", onChange);
+    return () => {
+      obs.disconnect();
+      small.removeEventListener("change", onChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (lightbox === null) return;
@@ -346,7 +368,9 @@ export function Site() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="WhatsApp da barbearia"
-        className={`fixed right-4 bottom-4 z-40 grid size-14 place-items-center bg-gold text-ink shadow-lg ${open ? "hidden" : ""}`}
+        className={`fixed right-4 bottom-4 z-40 grid size-14 place-items-center bg-gold text-ink shadow-lg transition-opacity duration-300 ${
+          open ? "hidden" : ""
+        } ${hideWa ? "max-md:pointer-events-none max-md:opacity-0" : ""}`}
       >
         <WhatsAppIcon className="size-7" />
       </a>

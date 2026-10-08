@@ -93,18 +93,33 @@ export function upcomingDays(count = 14, now = bahiaNow()): DayCell[] {
   });
 }
 
-export function slotsFor(weekday: number): string[] {
+/** Horários da grade (de `slotMinutes` em `slotMinutes`) em que o serviço termina até o fechamento. */
+export function slotsFor(weekday: number, durationMinutes = shop.slotMinutes): string[] {
   const hours = hoursFor(weekday);
   if (!hours || hours.closed) return [];
   const [oh, om] = hours.open.split(":").map(Number);
   const [ch, cm] = hours.close.split(":").map(Number);
   const start = oh * 60 + om;
   const end = ch * 60 + cm;
+  const need = Math.max(1, durationMinutes);
   const out: string[] = [];
-  for (let t = start; t + shop.slotMinutes <= end; t += shop.slotMinutes) {
+  for (let t = start; t + need <= end; t += shop.slotMinutes) {
     out.push(`${pad(Math.floor(t / 60))}:${pad(t % 60)}`);
   }
   return out;
+}
+
+export function weekdayFromIso(iso: string) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(Date.UTC(y, (m || 1) - 1, d || 1)).getUTCDay();
+}
+
+/** O horário escolhido ainda cabe no serviço e não ficou no passado. */
+export function chosenTimeStillFits(iso: string | null, time: string | null, durationMinutes: number) {
+  if (!iso || !time) return false;
+  return (
+    slotsFor(weekdayFromIso(iso), durationMinutes).includes(time) && !isPastSlot(iso, time)
+  );
 }
 
 export function isPastSlot(iso: string, time: string, now = bahiaNow()) {
@@ -135,7 +150,9 @@ export function brl(value: number) {
 }
 
 export function waDigits() {
-  const digits = shop.whatsapp.replace(/\D/g, "");
+  const raw = shop.whatsapp.trim();
+  const digits = raw.replace(/\D/g, "");
+  if (!digits) return raw;
   return digits.startsWith("55") ? digits : `55${digits}`;
 }
 
@@ -152,13 +169,22 @@ export function barberName(id: string | null) {
   return shop.barbers.find((b) => b.id === id)?.name ?? "Sem preferência";
 }
 
+function clockLabel(hhmm: string) {
+  const [h, m] = hhmm.split(":").map(Number);
+  if (!m) return `${h}h`;
+  return `${h}h${pad(m)}`;
+}
+
 export function hoursLine() {
   const open = shop.hours.filter((h) => !h.closed);
   if (!open.length) return "Consulte os horários";
   const first = open[0];
   const last = open[open.length - 1];
   if (!first || first.closed || !last || last.closed) return "";
+  const span = `${first.label} a ${last.label}`;
   const sameClock = open.every((h) => !h.closed && h.open === first.open && h.close === first.close);
-  if (!sameClock) return `${first.label} a ${last.label}`;
-  return `${first.label} a ${last.label} · ${first.open}–${first.close}`;
+  if (sameClock) return `${span} · ${clockLabel(first.open)} às ${clockLabel(first.close)}`;
+  const earliest = open.reduce((min, h) => (!h.closed && h.open < min ? h.open : min), "99:99");
+  const latest = open.reduce((max, h) => (!h.closed && h.close > max ? h.close : max), "00:00");
+  return `${span} · ${clockLabel(earliest)} às ${clockLabel(latest)}`;
 }

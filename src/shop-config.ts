@@ -40,7 +40,15 @@ export type Shop = {
   year: number;
   cityLine: string;
   seoDescription: string;
-  /** DDD + número, sem o 55. */
+  /**
+   * URL pública do site, com https.
+   * Ex.: https://barbearia-leme.vercel.app
+   */
+  siteUrl: string;
+  /**
+   * WhatsApp: DDD + número, só dígitos, sem o 55.
+   * Ex.: 71912345678
+   */
   whatsapp: string;
   instagram: string;
   address: string;
@@ -67,8 +75,9 @@ export const shop: Shop = {
   cityLine: "Lauro de Freitas — BA",
   seoDescription:
     "Barbearia Leme, no Centro de Lauro de Freitas. Corte, barba e pigmentação com horário marcado pelo WhatsApp. Terça a sábado.",
-  whatsapp: "71987654321",
-  instagram: "barbearia.leme",
+  siteUrl: "[SEU_DOMINIO]",
+  whatsapp: "[SEU_NUMERO]",
+  instagram: "[SEU_INSTAGRAM]",
   address: "Av. Santos Dumont, 450 — Centro, Lauro de Freitas — BA",
   mapQuery: "Av. Santos Dumont, 450, Centro, Lauro de Freitas, Bahia, Brasil",
   slotMinutes: 30,

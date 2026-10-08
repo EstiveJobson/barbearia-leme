@@ -12,6 +12,7 @@ import {
   slotsFor,
   upcomingDays,
   waLink,
+  weekdayFromIso,
   type DayCell,
 } from "@/lib/schedule";
 
@@ -53,6 +54,7 @@ export function Booking({
   setState: Dispatch<SetStateAction<BookingState>>;
 }) {
   const [mounted, setMounted] = useState(false);
+  const [askAgain, setAskAgain] = useState(false);
   const skipScroll = useRef(true);
 
   useEffect(() => {
@@ -70,16 +72,30 @@ export function Booking({
   const days = useMemo(() => (mounted ? upcomingDays(14) : []), [mounted]);
   const service = shop.services.find((s) => s.id === state.serviceId) ?? null;
   const day = days.find((d) => d.iso === state.date) ?? null;
+  const duration = service?.duration ?? shop.slotMinutes;
+
+  useEffect(() => {
+    if (!service || !state.date || !state.time) return;
+    const fits = slotsFor(weekdayFromIso(state.date), service.duration).includes(state.time);
+    const past = isPastSlot(state.date, state.time);
+    if (fits && !past) return;
+    if (!fits) setAskAgain(true);
+    setState((s) => (s.time ? { ...s, time: null, step: s.step > 4 ? 4 : s.step } : s));
+  }, [service, state.date, state.time, setState]);
 
   const slotRows = useMemo(() => {
     if (!day || !state.barberId) return [];
-    return slotsFor(day.weekday)
+    return slotsFor(day.weekday, duration)
       .filter((time) => !isPastSlot(day.iso, time))
       .map((time) => ({
         time,
         taken: isSlotTaken(state.barberId ?? ANY_BARBER, day.iso, time),
       }));
-  }, [day, state.barberId]);
+  }, [day, state.barberId, duration]);
+
+  const dayHasLaterSlot = day
+    ? slotsFor(day.weekday).some((time) => !isPastSlot(day.iso, time))
+    : false;
 
   function go(step: BookingState["step"]) {
     setState((s) => ({ ...s, step }));
@@ -284,12 +300,19 @@ export function Booking({
               <Back onClick={() => go(3)} />
               {day && (
                 <p className="mt-4 text-sm text-mist">
-                  {dateLabel(day)} · horários de {shop.slotMinutes} min
+                  {dateLabel(day)} · serviço de {duration} min
+                </p>
+              )}
+              {askAgain && (
+                <p className="mt-3 text-sm text-gold">
+                  Esse horário não cabe no serviço escolhido. Escolha outro.
                 </p>
               )}
               {slotRows.length === 0 ? (
                 <p className="mt-4 border border-line px-4 py-6 text-mist">
-                  Os horários deste dia já passaram. Escolha outra data.
+                  {dayHasLaterSlot
+                    ? "Não há horário que caiba nesse serviço neste dia. Escolha outro dia."
+                    : "Os horários deste dia já passaram. Escolha outra data."}
                 </p>
               ) : (
                 <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -298,7 +321,10 @@ export function Booking({
                       key={slot.time}
                       type="button"
                       disabled={slot.taken}
-                      onClick={() => setState((s) => ({ ...s, time: slot.time, step: 5 }))}
+                      onClick={() => {
+                        setAskAgain(false);
+                        setState((s) => ({ ...s, time: slot.time, step: 5 }));
+                      }}
                       className={`min-h-12 border px-2 py-3 font-display text-xl tracking-wide tabular-nums ${
                         slot.taken
                           ? "cursor-not-allowed border-line text-mist line-through decoration-mist/60"
