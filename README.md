@@ -71,7 +71,7 @@ Todo o conteúdo do negócio fica em **`src/shop-config.ts`**. Não é preciso m
 | `seoDescription` | Descrição para o Google e para as prévias de link |
 | `siteUrl` | URL pública do site, com `https://` |
 | `whatsapp` | Número que recebe os agendamentos: DDD + número, só dígitos, sem o 55 (ex.: `71912345678`) |
-| `instagram` | Link do perfil no Instagram |
+| `instagram` | Usuário do Instagram, sem o `@` (ex.: `barbearialeme`) |
 | `address`, `mapQuery` | Endereço exibido e endereço usado no mapa |
 | `slotMinutes` | Intervalo entre horários da agenda, em minutos |
 | `hero` | Imagem de capa |
@@ -81,7 +81,7 @@ Todo o conteúdo do negócio fica em **`src/shop-config.ts`**. Não é preciso m
 | `reviews` | Depoimentos |
 | `gallery` | Fotos da galeria (`src` e `alt`) |
 
-> `siteUrl`, `whatsapp` e `instagram` vêm com marcadores (`[SEU_DOMINIO]`, `[SEU_NUMERO]`, `[SEU_INSTAGRAM]`). Preencha esses campos antes de publicar, senão os links de WhatsApp e Instagram e a imagem das prévias de link não funcionam.
+> Na demo, `siteUrl`, `whatsapp` e `instagram` estão com valores de teste (domínio da Vercel, número de teste e o perfil de exemplo `barbearialeme`). Troque pelos dados reais da barbearia antes de entregar ao cliente.
 
 Para trocar a imagem de compartilhamento, substitua `public/og.jpg` (1200×630).
 
@@ -89,7 +89,7 @@ Para trocar a imagem de compartilhamento, substitua `public/og.jpg` (1200×630).
 
 O projeto inclui um `vercel.json`, então basta importar o repositório na [Vercel](https://vercel.com). O build usa `npm run build`.
 
-Ainda não há uma versão publicada. Por enquanto, a demo roda localmente.
+Demo publicada: <https://barbearia-leme.vercel.app>
 
 ## Estrutura
 

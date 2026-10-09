@@ -75,9 +75,9 @@ export const shop: Shop = {
   cityLine: "Lauro de Freitas — BA",
   seoDescription:
     "Barbearia Leme, no Centro de Lauro de Freitas. Corte, barba e pigmentação com horário marcado pelo WhatsApp. Terça a sábado.",
-  siteUrl: "[SEU_DOMINIO]",
-  whatsapp: "[SEU_NUMERO]",
-  instagram: "[SEU_INSTAGRAM]",
+  siteUrl: "https://barbearia-leme.vercel.app",
+  whatsapp: "71994130031",
+  instagram: "barbearialeme",
   address: "Av. Santos Dumont, 450 — Centro, Lauro de Freitas — BA",
   mapQuery: "Av. Santos Dumont, 450, Centro, Lauro de Freitas, Bahia, Brasil",
   slotMinutes: 30,
