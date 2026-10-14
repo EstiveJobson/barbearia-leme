@@ -1,47 +1,47 @@
 # Barbearia Leme
 
-Site de demonstração para uma barbearia em Lauro de Freitas (BA), com agendamento online em 5 etapas e confirmação pelo WhatsApp.
+Demo site for a barbershop in Lauro de Freitas, Bahia, with a five-step online booking flow and confirmation over WhatsApp. The site UI is in Brazilian Portuguese.
 
-> **Projeto de portfólio.** A Barbearia Leme é um negócio fictício. Equipe, depoimentos e endereço são dados de exemplo, e as fotos vêm do Unsplash. O site foi feito para ser adaptado a barbearias reais trocando um único arquivo de configuração.
+> **Portfolio project.** Barbearia Leme is a fictional business. The team, testimonials, and address are sample data, and the photos come from Unsplash. The site is meant to be adapted for a real barbershop by editing a single configuration file.
 
-## Para que serve
+## What it's for
 
-Muitas barbearias ainda marcam horário por DM ou telefone, o que obriga o barbeiro a parar o corte para responder mensagem. Esta demo mostra uma alternativa simples: o cliente escolhe serviço, barbeiro, dia e horário sozinho no celular, e o pedido chega pronto no WhatsApp da casa.
+Many barbershops still take appointments by direct message or phone, so the barber has to stop a haircut to reply. This demo shows a simpler alternative: the client picks the service, barber, day, and time on their phone, and a ready-to-send request lands in the shop's WhatsApp.
 
-## Funcionalidades
+## Features
 
-**Agendamento em 5 etapas** (`src/components/barbearia/booking.tsx`)
+**Five-step booking** (`src/components/barbearia/booking.tsx`)
 
-1. **Serviço**: lista com descrição, preço e duração.
-2. **Barbeiro**: um profissional específico ou "Sem preferência".
-3. **Dia**: os próximos 14 dias, com os dias fechados bloqueados.
-4. **Horário**: só aparecem horários em que o serviço termina antes do fechamento. Horários que já passaram no dia de hoje ficam ocultos.
-5. **Dados**: nome (obrigatório) e telefone (opcional), com um resumo do agendamento e o botão de confirmar.
+1. **Service**: a list with description, price, and duration.
+2. **Barber**: a specific barber, or "Sem preferência" (no preference).
+3. **Day**: the next 14 days, with closed days blocked.
+4. **Time**: only slots where the service finishes before closing. Times that have already passed today stay hidden.
+5. **Details**: name (required) and phone (optional), plus a booking summary and a confirm button.
 
-Ao confirmar, o site abre o WhatsApp da barbearia com uma mensagem já preenchida contendo serviço, preço, barbeiro, data, horário, nome e, se informado, o telefone do cliente.
+On confirm, the site opens the barbershop's WhatsApp with a prefilled message that includes the service, price, barber, date, time, name, and the client's phone number when one was given.
 
-**Página**
+**Page**
 
-- Cabeçalho fixo com menu para celular
-- Seções de serviços, galeria (com visualização ampliada e navegação pelo teclado), barbeiros, depoimentos e localização
-- Mapa do Google incorporado, endereço, horário de funcionamento e link para o Instagram
-- Botão flutuante de WhatsApp para contato geral
-- Datas e horários calculados no fuso `America/Bahia`
-- Metadados de SEO e Open Graph em português (imagem de compartilhamento em `public/og.jpg`)
+- Fixed header with a mobile menu
+- Sections for services, gallery (enlarged view, with keyboard navigation), barbers, testimonials, and location
+- Embedded Google Map, address, opening hours, and an Instagram link
+- Floating WhatsApp button for general contact
+- Dates and times calculated in the `America/Bahia` timezone
+- SEO and Open Graph metadata in Portuguese (share image at `public/og.jpg`)
 
-**Limitação conhecida:** não existe um sistema de agenda no servidor. Os horários marcados como "Ocupado" são simulados para a demonstração (sempre os mesmos para o mesmo barbeiro, dia e hora), e a confirmação de verdade acontece na conversa do WhatsApp.
+**Known limitation:** there is no server-side calendar. Slots marked "Ocupado" (busy) are simulated for the demo — always the same ones for a given barber, day, and time — and the real confirmation happens in the WhatsApp conversation.
 
 ## Stack
 
 - [React 19](https://react.dev) + [TypeScript](https://www.typescriptlang.org)
 - [TanStack Start](https://tanstack.com/start) / TanStack Router
-- [Vite](https://vite.dev) e [Nitro](https://nitro.build) (servidor e build)
+- [Vite](https://vite.dev) and [Nitro](https://nitro.build) (server and build)
 - [Tailwind CSS 4](https://tailwindcss.com)
-- [lucide-react](https://lucide.dev) (ícones)
+- [lucide-react](https://lucide.dev) (icons)
 
-## Como rodar localmente
+## Running it locally
 
-Requer **Node.js 22.12 ou superior** (definido em `engines` no `package.json`).
+Requires **Node.js 22.12 or later** (set in `engines` in `package.json`).
 
 ```bash
 git clone https://github.com/EstiveJobson/barbearia-leme.git
@@ -50,61 +50,61 @@ npm install
 npm run dev
 ```
 
-O servidor de desenvolvimento sobe em `http://localhost:8080`.
+The dev server starts at `http://localhost:8080`.
 
-| Script | O que faz |
+| Script | What it does |
 | --- | --- |
-| `npm run dev` | Servidor de desenvolvimento na porta 8080 |
-| `npm run build` | Build de produção |
-| `npm run preview` | Serve o build de produção localmente |
-| `npm run typecheck` | Verificação de tipos com o TypeScript |
+| `npm run dev` | Development server on port 8080 |
+| `npm run build` | Production build |
+| `npm run preview` | Serves the production build locally |
+| `npm run typecheck` | TypeScript type check |
 | `npm run lint` | ESLint |
 | `npm run format` | Prettier |
 
-## Como adaptar para outra barbearia
+## Adapting it for another barbershop
 
-Todo o conteúdo do negócio fica em **`src/shop-config.ts`**. Não é preciso mexer nos componentes.
+All of the business content lives in **`src/shop-config.ts`**. The components do not need to change.
 
-| Campo | Para que serve |
+| Field | What it is for |
 | --- | --- |
-| `name`, `tagline`, `intro`, `cityLine`, `year` | Nome e textos de apresentação |
-| `seoDescription` | Descrição para o Google e para as prévias de link |
-| `siteUrl` | URL pública do site, com `https://` |
-| `whatsapp` | Número que recebe os agendamentos: DDD + número, só dígitos, sem o 55 (ex.: `71912345678`) |
-| `instagram` | Usuário do Instagram, sem o `@` (ex.: `barbearialeme`) |
-| `address`, `mapQuery` | Endereço exibido e endereço usado no mapa |
-| `slotMinutes` | Intervalo entre horários da agenda, em minutos |
-| `hero` | Imagem de capa |
-| `services` | Serviços: `id`, `name`, `description`, `price` (R$) e `duration` (minutos) |
-| `barbers` | Equipe: `id`, `name`, `specialty` e `photo` |
-| `hours` | Funcionamento por dia da semana (0 = domingo), com `open`/`close` ou `closed: true` |
-| `reviews` | Depoimentos |
-| `gallery` | Fotos da galeria (`src` e `alt`) |
+| `name`, `tagline`, `intro`, `cityLine`, `year` | Name and intro copy |
+| `seoDescription` | Description for Google and for link previews |
+| `siteUrl` | Public site URL, including `https://` |
+| `whatsapp` | Number that receives bookings: area code (DDD) plus the number, digits only, without the country code 55 (for example, `71912345678`) |
+| `instagram` | Instagram username, without the `@` (for example, `barbearialeme`) |
+| `address`, `mapQuery` | Address shown on the page, and the address used by the map |
+| `slotMinutes` | Gap between booking slots, in minutes |
+| `hero` | Cover image |
+| `services` | Services: `id`, `name`, `description`, `price` (R$), and `duration` (minutes) |
+| `barbers` | Team: `id`, `name`, `specialty`, and `photo` |
+| `hours` | Hours by weekday (0 = Sunday), with `open`/`close` or `closed: true` |
+| `reviews` | Testimonials |
+| `gallery` | Gallery photos (`src` and `alt`) |
 
-> Na demo, `siteUrl`, `whatsapp` e `instagram` estão com valores de teste (domínio da Vercel, número de teste e o perfil de exemplo `barbearialeme`). Troque pelos dados reais da barbearia antes de entregar ao cliente.
+> In the demo, `siteUrl`, `whatsapp`, and `instagram` use test values (a Vercel domain, a test number, and the sample profile `barbearialeme`). Replace them with the barbershop's real details before handing the site to a client.
 
-Para trocar a imagem de compartilhamento, substitua `public/og.jpg` (1200×630).
+To change the share image, replace `public/og.jpg` (1200×630).
 
 ## Deploy
 
-O projeto inclui um `vercel.json`, então basta importar o repositório na [Vercel](https://vercel.com). O build usa `npm run build`.
+The project includes a `vercel.json`, so importing the repository on [Vercel](https://vercel.com) is enough. The build uses `npm run build`.
 
-Demo publicada: <https://barbearia-leme.vercel.app>
+Published demo: <https://barbearia-leme.vercel.app>
 
-## Estrutura
+## Structure
 
 ```
 src/
-  shop-config.ts             # dados da barbearia (único arquivo a editar)
-  components/barbearia/      # página (site.tsx) e agendamento (booking.tsx)
-  lib/schedule.ts            # horários, fuso America/Bahia e link do WhatsApp
-  routes/                    # rotas do TanStack Router e metadados (__root.tsx)
-public/                      # ícones e imagem de compartilhamento
-scripts/, server/           # infraestrutura do template gerado pelo modo Build do Grok
+  shop-config.ts             # barbershop data (the only file to edit)
+  components/barbearia/      # page (site.tsx) and booking (booking.tsx)
+  lib/schedule.ts            # slots, the America/Bahia timezone, and the WhatsApp link
+  routes/                    # TanStack Router routes and metadata (__root.tsx)
+public/                      # icons and the share image
+scripts/, server/           # infrastructure from the template generated by Grok Build mode
 ```
 
-O site não tem área de login. O código de autenticação em `src/lib/auth` veio do template e não protege nenhuma página.
+The site has no login area. The authentication code in `src/lib/auth` came from the template and does not protect any page.
 
-## Licença
+## License
 
 [MIT](LICENSE) © 2026 Sérgio Vieira ([@EstiveJobson](https://github.com/EstiveJobson))
